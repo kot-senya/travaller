@@ -11,15 +11,14 @@
     <style name="tv_city_name">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="fontFamily">@font/lifetreefont</item>
+        <item name="fontFamily">@font/ibmpilexsans_bold</item>
         <item name="android:textColor">@color/blue</item>
-        <item name="android:textSize">45dp</item>
+        <item name="android:textSize">25dp</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:foregroundTintMode">screen</item>
     </style>
 
     <style name="tv_city_region" parent="tv_city_name">
-        <item name="fontFamily">@font/ibmpilexsans_bold</item>
         <item name="android:textSize">14dp</item>
         <item name="android:layout_marginBottom">3dp</item>
     </style>

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.BASE.StaticData
 import com.example.myapplication.DATA_CLASS.City
 import com.example.myapplication.databinding.PartCityBinding
 
@@ -20,7 +21,7 @@ class AdapterCity(var collection: MutableList<City>, var visiblebtn: Boolean):Re
 
     override fun onBindViewHolder(holder: HolderCity, position: Int) {
         holder.binding.name.text = collection[position].name
-        //holder.binding.region.text = StaticData.getRegion(collection[position].idRegion)
+        holder.binding.region.text = StaticData.getRegion(collection[position].idRegion)
         if(visiblebtn) holder.binding.btnFavorite.visibility = View.VISIBLE
         else holder.binding.btnFavorite.visibility = View.GONE
     }

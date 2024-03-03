@@ -10,47 +10,49 @@
         android:id="@+id/ll1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/btn_fav_permission"
             style="@style/btn_main"
-            app:srcCompat="@drawable/ic_favorite_permission"/>
+            app:srcCompat="@drawable/ic_favorite_permission" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/sv"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="5dp"/>
+            android:layout_marginVertical="5dp" />
 
         <ImageButton
             android:id="@+id/btn_filter"
             style="@style/btn_main"
-            app:srcCompat="@drawable/ic_filter_city"/>
+            app:srcCompat="@drawable/ic_filter_city" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_popular"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll1"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="5dp"/>
+        app:layout_constraintTop_toBottomOf="@id/ll1" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_city"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv_popular"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="15dp"/>
+        app:layout_constraintTop_toBottomOf="@id/rv_popular" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

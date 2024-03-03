@@ -3,17 +3,22 @@ package com.example.myapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.ADAPTER.AdapterCity
-import com.example.myapplication.BASE.Connection
+import com.example.myapplication.BASE.StaticData
+import com.example.myapplication.BASE.Supabase
 import com.example.myapplication.DATA_CLASS.City
+import com.example.myapplication.DATA_CLASS.District
+import com.example.myapplication.DATA_CLASS.Region
 import com.example.myapplication.databinding.ActivityMainBinding
-import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.time.withTimeoutOrNull
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
@@ -24,30 +29,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
-        getData()
-    }
 
-    private fun getData() = runBlocking {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-
-                val l =  Connection.supabase.postgrest.from("tbCity").select().decodeList<City>()
-                l.forEach {
-                    Log.d("Data",it.name)
-                }
-                //loadRVCity(l)
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.println(Log.ERROR,"GetData", e.toString()) // Вывод в консоль для отладки
-                }
-            }
-            //Connection.getCity(client)
-            /* Connection.getPopularCity(client)
-             Connection.getRegion(client)
-             Connection.getPopularCity(client)*/
+        lifecycleScope.launch {
+            getData()
         }
-        //loadRVPopularCity(StaticData.city_popular)
-        //loadRVCity(StaticData.city)
+    }
+    private suspend fun getData() = withContext(Dispatchers.Main) {
+        runCatching {
+            StaticData.region = Supabase.client().postgrest.from("tbRegion").select().decodeList<Region>().toMutableList()
+            StaticData.district = Supabase.client().postgrest.from("tbDistrict").select().decodeList<District>().toMutableList()
+            StaticData.city =
+                Supabase.client().postgrest.from("tbCity").select().decodeList<City>()
+                    .toMutableList()
+        }.onSuccess {
+            StaticData.city_popular = StaticData.city.filter { it.popular }.toMutableList()
+            loadRVCity(StaticData.city)
+            loadRVPopularCity(StaticData.city_popular)
+        }.onFailure {
+            Log.e("Supabse", "Ошибка получения данных :${it}")
+        }
     }
 
     private fun loadRVPopularCity(collection: MutableList<City>) {
@@ -57,8 +57,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadRVCity(collection: MutableList<City>) {
-        bind.rvPopular.layoutManager =
+        bind.rvCity.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        bind.rvPopular.adapter = AdapterCity(collection, true)
+        bind.rvCity.adapter = AdapterCity(collection, true)
     }
+
 }
