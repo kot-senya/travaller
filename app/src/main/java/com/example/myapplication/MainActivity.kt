@@ -1,8 +1,13 @@
 package com.example.myapplication
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.ADAPTER.AdapterCity
@@ -13,13 +18,10 @@ import com.example.myapplication.DATA_CLASS.District
 import com.example.myapplication.DATA_CLASS.Region
 import com.example.myapplication.databinding.ActivityMainBinding
 import io.github.jan.supabase.postgrest.postgrest
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.withTimeoutOrNull
 import kotlinx.coroutines.withContext
+
 
 class MainActivity : AppCompatActivity() {
     private var _bind: ActivityMainBinding? = null
@@ -28,8 +30,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _bind = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(bind.root)
-
+        setContentView(bind.root)/*
+        var animation: RotateAnimation = RotateAnimation(-10f, 10f, 0f, 0f)
+        animation.repeatMode = Animation.REVERSE
+        animation.setRepeatCount(Animation.INFINITE)
+        animation.interpolator = LinearInterpolator()
+        animation.setDuration(450L)*/
+        bind.imageDialog1.startAnimation(AnimationUtils.loadAnimation(this, R.anim.animation_center))
         lifecycleScope.launch {
             getData()
         }
@@ -45,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             StaticData.city_popular = StaticData.city.filter { it.popular }.toMutableList()
             loadRVCity(StaticData.city)
             loadRVPopularCity(StaticData.city_popular)
+            bind.dialog1.visibility = View.GONE
         }.onFailure {
             Log.e("Supabse", "Ошибка получения данных :${it}")
         }

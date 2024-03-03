@@ -27,7 +27,7 @@
         <TextView
             android:id="@+id/name"
             style="@style/tv_city_name"
-            android:maxWidth="215dp"
+            android:maxWidth="220dp"
             android:maxLines="2"
             android:textAlignment="textEnd"
             android:layout_gravity="bottom|right"

@@ -15,8 +15,6 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.serializer
-
-//@Keep
 @Serializable
 data class City(
     @SerialName("id")
