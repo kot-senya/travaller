@@ -26,6 +26,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="black_light">#7000</color>
+    <color name="black_ligh90">#9000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#86a5d9</color>
     <color name="blue_light80">#8086a5d9</color>

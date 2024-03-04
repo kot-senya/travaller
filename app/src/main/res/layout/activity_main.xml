@@ -34,45 +34,153 @@
             app:srcCompat="@drawable/ic_filter_city" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_popular"
+    <LinearLayout
+        android:id="@+id/ll2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="5dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll1" />
+        app:layout_constraintTop_toBottomOf="@id/ll1">
+
+        <TextView
+            style="@style/tv_city_region"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Популярное" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_popular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv"
+        style="@style/tv_city_region"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:text="Гид"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_city"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="15dp"
+        android:layout_marginVertical="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv_popular" />
+        app:layout_constraintTop_toBottomOf="@id/tv" />
 
     <LinearLayout
         android:id="@+id/dialog1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@color/black_light"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
+
         <TextView
+            android:id="@+id/textview_dialog1"
+            style="@style/tv_city_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="30dp"
             android:text="Идет загрузка.."
-            android:textAlignment="center"
-            style="@style/tv_city_name"
-            android:layout_marginVertical="30dp"/>
+            android:textAlignment="center" />
+
         <ImageView
             android:id="@+id/image_dialog1"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:src="@drawable/unicorn_1"/>
+            android:src="@drawable/unicorn_1" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_ligh90"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/dialog2_btn_close"
+            style="@style/btn_main"
+            android:src="@drawable/ic_close"
+            android:layout_gravity="right"/>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="45dp">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/unicorn_2"/>
+
+            <TextView
+                style="@style/tv_city_name"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Избранное"
+                android:textAlignment="center" />
+
+            <TextView
+                style="@style/tv_usually"
+                android:layout_width="300dp"
+                android:fontFamily="@font/ibmpilexsans_regular"
+                android:layout_height="wrap_content"
+                android:text="Автоизируйтесь, чтобы активировать добавление в избранное"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                style="@style/tv_usually"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="5dp"
+                android:text="Введите почту"
+                android:textAlignment="center" />
+
+            <EditText
+                android:id="@+id/email"
+                style="@style/et_usually"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:hint="email@gmail.com"
+                android:inputType="textEmailAddress" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/dialog2_btn_auth"
+            style="@style/btn_usually"
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="50dp"
+            android:text="Войти"
+            android:enabled="false"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
