@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
-
+        <activity
+            android:name=".CityGuideActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

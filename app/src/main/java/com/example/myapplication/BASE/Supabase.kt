@@ -1,20 +1,8 @@
 package com.example.myapplication.BASE
 
-import android.util.Log
-import com.example.myapplication.DATA_CLASS.City
-import com.example.myapplication.DATA_CLASS.District
-import com.example.myapplication.DATA_CLASS.Region
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
-import io.github.jan.supabase.postgrest.PropertyConversionMethod
-import io.github.jan.supabase.postgrest.postgrest
-import io.github.jan.supabase.serializer.KotlinXSerializer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 
 object Supabase {
 

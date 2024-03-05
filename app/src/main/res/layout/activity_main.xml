@@ -113,24 +113,26 @@
         android:layout_height="match_parent"
         android:background="@color/black_ligh90"
         android:gravity="center_horizontal"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
+
         <ImageButton
             android:id="@+id/dialog2_btn_close"
             style="@style/btn_main"
-            android:src="@drawable/ic_close"
-            android:layout_gravity="right"/>
+            android:layout_gravity="right"
+            android:src="@drawable/ic_close" />
 
         <LinearLayout
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_marginTop="45dp"
             android:gravity="center"
-            android:layout_marginTop="45dp">
+            android:orientation="vertical">
+
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/unicorn_2"/>
+                android:src="@drawable/unicorn_2" />
 
             <TextView
                 style="@style/tv_city_name"
@@ -143,8 +145,8 @@
             <TextView
                 style="@style/tv_usually"
                 android:layout_width="300dp"
-                android:fontFamily="@font/ibmpilexsans_regular"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/ibmpilexsans_regular"
                 android:text="Автоизируйтесь, чтобы активировать добавление в избранное"
                 android:textAlignment="center" />
         </LinearLayout>
@@ -153,8 +155,8 @@
         <LinearLayout
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="15dp"
+            android:orientation="vertical">
 
             <TextView
                 style="@style/tv_usually"
@@ -180,7 +182,43 @@
             android:layout_width="200dp"
             android:layout_height="45dp"
             android:layout_marginTop="50dp"
-            android:text="Войти"
-            android:enabled="false"/>
+            android:enabled="false"
+            android:text="Войти" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_ligh90"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/dialog3_btn_close"
+            style="@style/btn_main"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_close" />
+
+        <TextView
+            style="@style/tv_city_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:text="Фильтрация по параметру"
+            android:textAlignment="center" />
+
+        <TextView
+            style="@style/tv_city_region"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Вы можете выбрать города определенного Федерального округа"
+            android:textAlignment="center" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_district"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

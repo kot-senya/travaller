@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -9,13 +10,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView.*
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.ADAPTER.AdapterCity
 import com.example.myapplication.ADAPTER.HolderCity
 import com.example.myapplication.BASE.StaticData
 import com.example.myapplication.BASE.Supabase
+import com.example.myapplication.DATA_CLASS.Category
 import com.example.myapplication.DATA_CLASS.City
 import com.example.myapplication.DATA_CLASS.District
 import com.example.myapplication.DATA_CLASS.Region
@@ -80,7 +81,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         bind.btnFilter.setOnClickListener {
-
+            enabledView(false)
+            bind.dialog3.visibility = View.VISIBLE
+            dialog3()
         }
 
         bind.sv.setOnQueryTextListener(object : OnQueryTextListener {
@@ -103,6 +106,8 @@ class MainActivity : AppCompatActivity() {
 
     private suspend fun getData() = withContext(Dispatchers.Main) {
         runCatching {
+            StaticData.category = Supabase.client().postgrest.from("tbCategory").select().decodeList<Category>()
+                .toMutableList()
             StaticData.region =
                 Supabase.client().postgrest.from("tbRegion").select().decodeList<Region>()
                     .toMutableList()
@@ -136,10 +141,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadRVPopularCity(collection: MutableList<City>) {
+        var adapterCity: AdapterCity = AdapterCity(collection, false)
+
         bind.rvPopular.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        bind.rvPopular.adapter = AdapterCity(collection, false)
+        bind.rvPopular.adapter = adapterCity
+
+        adapterCity.setLookListener(object : AdapterCity.LookGuide {
+            override fun onClick(holder: HolderCity, position: Int) {
+                lifecycleScope.launch {
+                    var c = StaticData.city.filter { it.id ==  StaticData.city_popular[position].id}.first()
+                    StaticData.city_guide_id = c.id
+                    startActivity(Intent(this@MainActivity, CityGuideActivity::class.java))
+                }
+            }
+        })
     }
+
     private fun loadRVCity(collection: MutableList<City>) {
         var adapterCity: AdapterCity = AdapterCity(collection, true)
         bind.rvCity.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -157,13 +175,15 @@ class MainActivity : AppCompatActivity() {
                         if (StaticData.getFavorite(newRecord)) {
                             Supabase.client().postgrest.from("tbUserFavorite").insert(newRecord)
                             newRecord.id =
-                                Supabase.client().postgrest.from("tbUserFavorite").select().decodeList<UserFavorite>()
+                                Supabase.client().postgrest.from("tbUserFavorite").select()
+                                    .decodeList<UserFavorite>()
                                     .filter { it.idCity == newRecord.idCity && it.idUser == it.idUser }
                                     .first().id
                             StaticData.city_favorite.add(newRecord)
                         } else {
                             newRecord.id =
-                                Supabase.client().postgrest.from("tbUserFavorite").select().decodeList<UserFavorite>()
+                                Supabase.client().postgrest.from("tbUserFavorite").select()
+                                    .decodeList<UserFavorite>()
                                     .filter { it.idCity == newRecord.idCity && it.idUser == it.idUser }
                                     .first().id
                             StaticData.city_favorite.remove(newRecord)
@@ -172,10 +192,10 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     }.onSuccess {
-                        if(!StaticData.city_favorite.filter { it.idCity ==  collection[position].id}.toMutableList().isEmpty() ){
+                        if (!StaticData.city_favorite.filter { it.idCity == collection[position].id }
+                                .toMutableList().isEmpty()) {
                             holder.binding.btnFavorite.setBackgroundResource(R.drawable.ic_favorite_city1)
-                        }
-                        else holder.binding.btnFavorite.setBackgroundResource(R.drawable.ic_favorite_city)
+                        } else holder.binding.btnFavorite.setBackgroundResource(R.drawable.ic_favorite_city)
                     }.onFailure {
                         Log.e("Supabse", "Ошибка отправки/удаления выбранного города :${it}")
                     }
@@ -185,7 +205,10 @@ class MainActivity : AppCompatActivity() {
 
         adapterCity.setLookListener(object : AdapterCity.LookGuide {
             override fun onClick(holder: HolderCity, position: Int) {
-
+                lifecycleScope.launch {
+                    StaticData.city_guide_id = StaticData.city[position].id
+                    startActivity(Intent(this@MainActivity, CityGuideActivity::class.java))
+                }
             }
         })
     }
@@ -204,6 +227,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         bind.email.addTextChangedListener(textWatcher_email)
+    }
+
+    private fun dialog3() {
+        bind.dialog3BtnClose.setOnClickListener {
+            bind.dialog3.visibility = View.GONE
+            enabledView(true)
+        }
     }
 
     private val textWatcher_email: TextWatcher = object : TextWatcher {
