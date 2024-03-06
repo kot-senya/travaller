@@ -1,15 +1,25 @@
 package com.example.myapplication
 
+import android.annotation.SuppressLint
+import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.ADAPTER.AdapterCityImage
 import com.example.myapplication.ADAPTER.AdapterPlace
+import com.example.myapplication.ADAPTER.AdapterPlaceImage
+import com.example.myapplication.ADAPTER.HolderPlace
 import com.example.myapplication.BASE.StaticData
 import com.example.myapplication.BASE.Supabase
 import com.example.myapplication.DATA_CLASS.CityImage
@@ -18,10 +28,16 @@ import com.example.myapplication.DATA_CLASS.PlaceImage
 import com.example.myapplication.DATA_CLASS.UserFavorite
 import com.example.myapplication.OTHER.Other
 import com.example.myapplication.databinding.ActivityCityGuideBinding
+import com.example.myapplication.databinding.PartPlaceBinding
+import com.yandex.mapkit.Animation
+import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 
 class CityGuideActivity : AppCompatActivity() {
     private var _bind: ActivityCityGuideBinding? = null
@@ -36,10 +52,16 @@ class CityGuideActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapKitFactory.setApiKey("0ce7e9a3-fde1-4bbf-98b9-f622772fcd7c")
+        MapKitFactory.initialize(this)
+
         _bind = ActivityCityGuideBinding.inflate(layoutInflater)
         _pref = getSharedPreferences("Travel", MODE_PRIVATE)
         setContentView(bind.root)
 
+        if (!StaticData.auth) {
+            bind.btnFavorite.visibility = View.GONE
+        }
         setVisibility(View.GONE)
         setData()
         setListener()
@@ -140,8 +162,11 @@ class CityGuideActivity : AppCompatActivity() {
         }.onSuccess {
             bind.dialog1.visibility = View.GONE
             if (flag_guide) {
-                if (city_image.size > 0) loadRVCityImage(city_image)
-                else bind.rvCityImage.visibility = View.GONE
+                if (city_image.size > 0) {
+                    0
+                    bind.rvCityImage.visibility = View.VISIBLE
+                    loadRVCityImage(city_image)
+                } else bind.rvCityImage.visibility = View.GONE
 
                 var _object: MutableList<Place> =
                     city_place.filter { it.idCategory == 3 }.toMutableList()
@@ -173,6 +198,8 @@ class CityGuideActivity : AppCompatActivity() {
 
         }.onFailure {
             Log.e("Supabase", "Ошибка получения данных : ${it}")
+            bind.dialog1.visibility = View.GONE
+            bind.dialog0.visibility = View.VISIBLE
         }
     }
 
@@ -183,18 +210,91 @@ class CityGuideActivity : AppCompatActivity() {
     }
 
     private fun loadRVObject(collection: MutableList<Place>) {
+        val adapter: AdapterPlace = AdapterPlace(collection, place_image)
         bind.rvObject.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        bind.rvObject.adapter = AdapterPlace(collection, place_image)
+        bind.rvObject.adapter = adapter
+        adapter.setListener(listener)
     }
 
     private fun loadRVFood(collection: MutableList<Place>) {
+        val adapter: AdapterPlace = AdapterPlace(collection, place_image)
         bind.rvFood.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        bind.rvFood.adapter = AdapterPlace(collection, place_image)
+        bind.rvFood.adapter = adapter
+        adapter.setListener(listener)
     }
 
     private fun loadRVOhter(collection: MutableList<Place>) {
+        val adapter: AdapterPlace = AdapterPlace(collection, place_image)
         bind.rvOther.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        bind.rvOther.adapter = AdapterPlace(collection, place_image)
+        bind.rvOther.adapter = adapter
+        adapter.setListener(listener)
     }
 
+    var listener: AdapterPlace.Listener = object : AdapterPlace.Listener {
+        @SuppressLint("SetTextI18n")
+        override fun onClick(
+            holder: HolderPlace,
+            image: MutableList<PlaceImage>,
+            place: Place
+        ) {
+            try {
+                val dialog = Dialog(this@CityGuideActivity)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+                val _bind = PartPlaceBinding.inflate(layoutInflater)
+                dialog.setContentView(_bind.root)
+
+                _bind.time.text = place.workingHours
+
+                _bind.name.text = place.name
+                if (place.cost == 0f)
+                    _bind.cost.text = "бесплатно"
+                else
+                    _bind.cost.text = place.cost.toString() + " ₽"
+                if (place.description != null)
+                    _bind.description.text = place.description.toString()
+                else
+                    _bind.description.text = "Описание отсутствует"
+
+                if (place.coordinates != null) {
+                    val coordinat: String = place.coordinates!!.split(", ").toString()
+                    _bind.mapview.map.move(CameraPosition(Point(coordinat[0].toDouble(), coordinat[1].toDouble()), 10.0f, 0.0f, 0.0f),
+                        Animation(Animation.Type.SMOOTH, 300f), null)
+
+                    Log.d("Dialog", "not coordinates")
+                } else
+                _bind.mapview.visibility = View.GONE
+
+                if(image.size > 0){
+                    _bind.image.layoutManager = LinearLayoutManager(this@CityGuideActivity, LinearLayoutManager.HORIZONTAL, false)
+                    _bind.image.adapter = AdapterPlaceImage(image)
+                }
+                else _bind.image.visibility = View.GONE
+
+                dialog.show()
+
+                dialog.getWindow()
+                    ?.setLayout(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                dialog.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog.getWindow()?.getAttributes()?.windowAnimations = R.style.DialogAnimation;
+                dialog.getWindow()?.setGravity(Gravity.BOTTOM);
+
+            } catch (e: Exception) {
+                Log.e("Dialog", e.message.toString())
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        MapKitFactory.getInstance().onStart()
+    }
+
+    override fun onStop() {
+        MapKitFactory.getInstance().onStop()
+        super.onStop()
+    }
 }

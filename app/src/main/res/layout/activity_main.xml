@@ -205,7 +205,7 @@
             style="@style/tv_city_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="30dp"
             android:text="Фильтрация по параметру"
             android:textAlignment="center" />
 
@@ -218,7 +218,41 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_district"
-            android:layout_width="350dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="30dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog0"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_ligh90"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            style="@style/tv_city_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="300dp"
+            android:layout_marginTop="80dp"
+            android:text="Ошибка загрузки данных"
+            android:textAlignment="center" />
+
+        <TextView
+            style="@style/tv_city_region"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="В связи с некоторыми обстоятельствами, нам не удалось загрузить данные"
+            android:textAlignment="center" />
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/unicorn_5"
+            android:layout_marginVertical="15dp"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

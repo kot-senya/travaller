@@ -8,6 +8,38 @@
     tools:context=".CityGuideActivity">
 
     <LinearLayout
+        android:id="@+id/dialog0"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_ligh90"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            style="@style/tv_city_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="300dp"
+            android:layout_marginTop="80dp"
+            android:text="Ошибка загрузки данных"
+            android:textAlignment="center" />
+
+        <TextView
+            style="@style/tv_city_region"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="В связи с некоторыми обстоятельствами, нам не удалось загрузить данные"
+            android:textAlignment="center" />
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/unicorn_5"
+            android:layout_marginVertical="15dp"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/dialog1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -74,23 +106,26 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/blue"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:gravity="center">
 
             <ImageButton
+
                 android:id="@+id/btn_back"
                 style="@style/btn_main"
+                android:layout_alignParentLeft="true"
                 app:srcCompat="@drawable/ic_back" />
 
             <TextView
                 android:id="@+id/tv_city_name"
                 style="@style/tv_city_name"
-                android:layout_width="300dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/btn_back"
+                android:layout_alignRight="@id/btn_favorite"
                 android:layout_marginVertical="5dp"
                 android:gravity="center"
                 android:text="Город"
@@ -99,9 +134,9 @@
             <ImageButton
                 android:id="@+id/btn_favorite"
                 style="@style/btn_main"
+                android:layout_alignParentRight="true"
                 app:srcCompat="@drawable/ic_favorite_city" />
-        </LinearLayout>
-
+        </RelativeLayout>
 
 
         <ScrollView

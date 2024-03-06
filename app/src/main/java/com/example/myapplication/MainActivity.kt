@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView.*
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.ADAPTER.AdapterCity
+import com.example.myapplication.ADAPTER.AdapterDistrict
 import com.example.myapplication.ADAPTER.HolderCity
 import com.example.myapplication.BASE.StaticData
 import com.example.myapplication.BASE.Supabase
@@ -26,6 +28,7 @@ import com.example.myapplication.OTHER.Other
 import com.example.myapplication.databinding.ActivityMainBinding
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -117,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             StaticData.city = Supabase.client().postgrest.from("tbCity").select().decodeList<City>()
                 .toMutableList()
             StaticData.city.sortBy { it.name }
-            if (pref.getInt("UserId", 0) == 0) {
+            if (pref.getInt("UserId", 0) == 0 && pref.getString("Email", null) != null) {
                 var u: User =
                     Supabase.client().postgrest.from("tbUsers").select().decodeList<User>()
                         .filter { it.email == pref.getString("Email", null) }.first()
@@ -137,6 +140,8 @@ class MainActivity : AppCompatActivity() {
             visibilityLL(View.VISIBLE)
         }.onFailure {
             Log.e("Supabse", "Ошибка получения данных :${it}")
+            bind.dialog1.visibility = View.GONE
+            bind.dialog0.visibility = View.VISIBLE
         }
     }
 
@@ -230,9 +235,45 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun dialog3() {
+        val list: MutableList<District> = mutableListOf()
+        list.add(District(0, "Все федеральные округа"))
+        list.addAll(StaticData.district)
+
+        var adapter: AdapterDistrict = AdapterDistrict(list)
+        bind.rvDistrict.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        bind.rvDistrict.adapter = adapter
+
+        adapter.setOnListener(object : AdapterDistrict.Listener{
+            override fun onClick(holder: RecyclerView.ViewHolder, position: Int) {
+                if (position != 0){
+                    var list_region: MutableList<Region> = StaticData.region.filter { it.idDistrict == StaticData.district[position-1].id }.toMutableList()
+                    var list_city: MutableList<City> = mutableListOf()
+                    for(city in StaticData.city){
+                        val count: Int = list_region.filter { it.id == city.idRegion }.size
+                        if(count > 0)
+                            list_city.add(city)
+                    }
+
+                    loadRVCity(list_city)
+
+                }
+                else{
+                    loadRVCity(StaticData.city)
+                }
+
+                lifecycleScope.launch {
+                    enabledView(true)
+                    delay(300)
+                    bind.dialog3.visibility = View.GONE
+                }
+            }
+
+        })
+
         bind.dialog3BtnClose.setOnClickListener {
             bind.dialog3.visibility = View.GONE
             enabledView(true)
+
         }
     }
 

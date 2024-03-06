@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.myapplication"
-        minSdk = 33
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -59,4 +59,7 @@ dependencies {
 
     //Picasso
     implementation("com.squareup.picasso:picasso:2.71828")
+
+    //MapKit
+    implementation ("com.yandex.android:maps.mobile:4.5.1-lite")
 }
