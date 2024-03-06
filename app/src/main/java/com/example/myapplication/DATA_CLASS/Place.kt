@@ -21,5 +21,7 @@ data class Place(
     @SerialName("idCity")
     var idCity: Int = 0,
     @SerialName("cost")
-    var cost: Float = 0f
+    var cost: Float = 0f,
+    @SerialName("adress")
+    var adress: String? = null
 )

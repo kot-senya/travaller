@@ -2,6 +2,8 @@ package com.example.myapplication
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -13,6 +15,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -256,10 +259,26 @@ class CityGuideActivity : AppCompatActivity() {
                 else
                     _bind.description.text = "Описание отсутствует"
 
+                if(place.adress != null){
+                    _bind.adress.text = place.adress.toString()
+                    _bind.btnCopy.setOnClickListener {
+                        val clipboard: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip: ClipData = ClipData.newPlainText("Edit text", place.adress.toString())
+                        clipboard.setPrimaryClip(clip)
+
+                        clip.description
+
+                        Toast.makeText(this@CityGuideActivity, "Адрес скопирован", Toast.LENGTH_SHORT).show()
+                    }
+                }else{
+                    _bind.adress.text = "не указан"
+                    _bind.btnCopy.visibility = View.GONE
+                }
+
                 if (place.coordinates != null) {
-                    val coordinat: String = place.coordinates!!.split(", ").toString()
-                    _bind.mapview.map.move(CameraPosition(Point(coordinat[0].toDouble(), coordinat[1].toDouble()), 10.0f, 0.0f, 0.0f),
-                        Animation(Animation.Type.SMOOTH, 300f), null)
+                    val coordinat = place.coordinates!!.split(", ").toTypedArray()
+                    _bind.mapview.map.move(CameraPosition(Point(coordinat[0].toDouble(), coordinat[1].toDouble()), 17.0f, 0.0f, 0.0f),
+                        Animation(Animation.Type.SMOOTH, 2f), null)
 
                     Log.d("Dialog", "not coordinates")
                 } else
@@ -271,6 +290,9 @@ class CityGuideActivity : AppCompatActivity() {
                 }
                 else _bind.image.visibility = View.GONE
 
+                _bind.btnClose.setOnClickListener {
+                    dialog.cancel()
+                }
                 dialog.show()
 
                 dialog.getWindow()

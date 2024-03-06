@@ -8,16 +8,20 @@
     android:layout_marginVertical="5dp"
     android:layout_gravity="center_horizontal"
     android:paddingVertical="7dp"
-    android:paddingEnd="15dp">
+    android:paddingEnd="15dp"
+    android:maxWidth="370dp">
 
     <FrameLayout
-        android:layout_width="370dp"
+        android:layout_width="360dp"
         android:layout_height="150dp"
-        tools:ignore="MissingConstraints"
-        android:background="@drawable/background_part_city">
+        android:minWidth="355dp"
+        android:maxWidth="360dp"
+        android:background="@drawable/background_part_city"
+        tools:ignore="MissingConstraints">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
+            android:layout_width="355dp"
+            android:maxWidth="350dp"
             android:layout_height="match_parent"
             app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="15dp"
@@ -63,11 +67,6 @@
             android:text="Регион"
             android:foregroundTint="@color/black_light"
             android:layout_gravity="bottom|right"/>
-
-
     </FrameLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
